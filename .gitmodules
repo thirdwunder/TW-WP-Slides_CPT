@@ -1,0 +1,6 @@
+[submodule "includes/Tax-Meta-Class"]
+	path = includes/Tax-Meta-Class
+	url = https://mohamedhamad@github.com/thirdwunder/Tax-Meta-Class.git
+[submodule "includes/My-Meta-Box"]
+	path = includes/My-Meta-Box
+	url = https://mohamedhamad@github.com/thirdwunder/My-Meta-Box.git

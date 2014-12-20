@@ -67,7 +67,7 @@ class TW_Slides_Plugin_Settings {
 	 * @return void
 	 */
 	public function add_menu_item () {
-		$page = add_options_page( __( 'Plugin Settings', 'tw-slides-plugin' ) , __( 'Plugin Settings', 'tw-slides-plugin' ) , 'manage_options' , $this->parent->_token . '_settings' ,  array( $this, 'settings_page' ) );
+		$page = add_options_page( __( 'Plugin Settings', 'tw-slides-plugin' ) , __( 'TW Slides', 'tw-slides-plugin' ) , 'manage_options' , $this->parent->_token . '_settings' ,  array( $this, 'settings_page' ) );
 		add_action( 'admin_print_styles-' . $page, array( $this, 'settings_assets' ) );
 	}
 
@@ -108,75 +108,98 @@ class TW_Slides_Plugin_Settings {
 	private function settings_fields () {
 
 		$settings['standard'] = array(
-			'title'					=> __( 'Standard', 'tw-slides-plugin' ),
-			'description'			=> __( 'These are fairly standard form input fields.', 'tw-slides-plugin' ),
+			'title'					=> __( 'Settings', 'tw-slides-plugin' ),
+			'description'			=> __( 'Third Wunder Slides plugin settings', 'tw-slides-plugin' ),
 			'fields'				=> array(
 				array(
-					'id' 			=> 'text_field',
-					'label'			=> __( 'Some Text' , 'tw-slides-plugin' ),
-					'description'	=> __( 'This is a standard text field.', 'tw-slides-plugin' ),
-					'type'			=> 'text',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
-				),
-				array(
-					'id' 			=> 'password_field',
-					'label'			=> __( 'A Password' , 'tw-slides-plugin' ),
-					'description'	=> __( 'This is a standard password field.', 'tw-slides-plugin' ),
-					'type'			=> 'password',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
-				),
-				array(
-					'id' 			=> 'secret_text_field',
-					'label'			=> __( 'Some Secret Text' , 'tw-slides-plugin' ),
-					'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'tw-slides-plugin' ),
-					'type'			=> 'text_secret',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
-				),
-				array(
-					'id' 			=> 'text_block',
-					'label'			=> __( 'A Text Block' , 'tw-slides-plugin' ),
-					'description'	=> __( 'This is a standard text area.', 'tw-slides-plugin' ),
-					'type'			=> 'textarea',
-					'default'		=> '',
-					'placeholder'	=> __( 'Placeholder text for this textarea', 'tw-slides-plugin' )
-				),
-				array(
-					'id' 			=> 'single_checkbox',
-					'label'			=> __( 'An Option', 'tw-slides-plugin' ),
-					'description'	=> __( 'A standard checkbox - if you save this option as checked then it will store the option as \'on\', otherwise it will be an empty string.', 'tw-slides-plugin' ),
+					'id' 			=> 'tw_slide_category',
+					'label'			=> __( 'Enable Categories', 'tw-slides-plugin' ),
+					'description'	=> __( 'Enable Slide categories', 'tw-slides-plugin' ),
 					'type'			=> 'checkbox',
 					'default'		=> ''
 				),
 				array(
-					'id' 			=> 'select_box',
-					'label'			=> __( 'A Select Box', 'tw-slides-plugin' ),
-					'description'	=> __( 'A standard select box.', 'tw-slides-plugin' ),
-					'type'			=> 'select',
-					'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
-					'default'		=> 'wordpress'
+					'id' 			=> 'tw_slide_tag',
+					'label'			=> __( 'Enable Tags', 'tw-slides-plugin' ),
+					'description'	=> __( 'Enable Slide tags', 'tw-slides-plugin' ),
+					'type'			=> 'checkbox',
+					'default'		=> ''
 				),
 				array(
-					'id' 			=> 'radio_buttons',
-					'label'			=> __( 'Some Options', 'tw-slides-plugin' ),
-					'description'	=> __( 'A standard set of radio buttons.', 'tw-slides-plugin' ),
-					'type'			=> 'radio',
-					'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
-					'default'		=> 'batman'
+					'id' 			=> 'tw_slide_enable_video',
+					'label'			=> __( 'Enable Video', 'tw-slides-plugin' ),
+					'description'	=> __( 'Enable video options in slides', 'tw-slides-plugin' ),
+					'type'			=> 'checkbox',
+					'default'		=> ''
 				),
 				array(
-					'id' 			=> 'multiple_checkboxes',
-					'label'			=> __( 'Some Items', 'tw-slides-plugin' ),
-					'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'tw-slides-plugin' ),
-					'type'			=> 'checkbox_multi',
-					'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
-					'default'		=> array( 'circle', 'triangle' )
-				)
+					'id' 			=> 'tw_slide_enable_expiration',
+					'label'			=> __( 'Enable Expiration', 'tw-slides-plugin' ),
+					'description'	=> __( 'Enable the option to expire a slide at a date and time', 'tw-slides-plugin' ),
+					'type'			=> 'checkbox',
+					'default'		=> ''
+				),
+
+//				array(
+//					'id' 			=> 'text_field',
+//					'label'			=> __( 'Some Text' , 'tw-slides-plugin' ),
+//					'description'	=> __( 'This is a standard text field.', 'tw-slides-plugin' ),
+//					'type'			=> 'text',
+//					'default'		=> '',
+//					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
+//				),
+//				array(
+//					'id' 			=> 'password_field',
+//					'label'			=> __( 'A Password' , 'tw-slides-plugin' ),
+//					'description'	=> __( 'This is a standard password field.', 'tw-slides-plugin' ),
+//					'type'			=> 'password',
+//					'default'		=> '',
+//					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
+//				),
+//				array(
+//					'id' 			=> 'secret_text_field',
+//					'label'			=> __( 'Some Secret Text' , 'tw-slides-plugin' ),
+//					'description'	=> __( 'This is a secret text field - any data saved here will not be displayed after the page has reloaded, but it will be saved.', 'tw-slides-plugin' ),
+//					'type'			=> 'text_secret',
+//					'default'		=> '',
+//					'placeholder'	=> __( 'Placeholder text', 'tw-slides-plugin' )
+//				),
+//				array(
+//					'id' 			=> 'text_block',
+//					'label'			=> __( 'A Text Block' , 'tw-slides-plugin' ),
+//					'description'	=> __( 'This is a standard text area.', 'tw-slides-plugin' ),
+//					'type'			=> 'textarea',
+//					'default'		=> '',
+//					'placeholder'	=> __( 'Placeholder text for this textarea', 'tw-slides-plugin' )
+//				),
+//				array(
+//					'id' 			=> 'select_box',
+//					'label'			=> __( 'A Select Box', 'tw-slides-plugin' ),
+//					'description'	=> __( 'A standard select box.', 'tw-slides-plugin' ),
+//					'type'			=> 'select',
+//					'options'		=> array( 'drupal' => 'Drupal', 'joomla' => 'Joomla', 'wordpress' => 'WordPress' ),
+//					'default'		=> 'wordpress'
+//				),
+//				array(
+//					'id' 			=> 'radio_buttons',
+//					'label'			=> __( 'Some Options', 'tw-slides-plugin' ),
+//					'description'	=> __( 'A standard set of radio buttons.', 'tw-slides-plugin' ),
+//					'type'			=> 'radio',
+//					'options'		=> array( 'superman' => 'Superman', 'batman' => 'Batman', 'ironman' => 'Iron Man' ),
+//					'default'		=> 'batman'
+//				),
+//				array(
+//					'id' 			=> 'multiple_checkboxes',
+//					'label'			=> __( 'Some Items', 'tw-slides-plugin' ),
+//					'description'	=> __( 'You can select multiple items and they will be stored as an array.', 'tw-slides-plugin' ),
+//					'type'			=> 'checkbox_multi',
+//					'options'		=> array( 'square' => 'Square', 'circle' => 'Circle', 'rectangle' => 'Rectangle', 'triangle' => 'Triangle' ),
+//					'default'		=> array( 'circle', 'triangle' )
+//				)
 			)
 		);
 
+/*
 		$settings['extra'] = array(
 			'title'					=> __( 'Extra', 'tw-slides-plugin' ),
 			'description'			=> __( 'These are some extra input fields that maybe aren\'t as common as the others.', 'tw-slides-plugin' ),
@@ -214,6 +237,7 @@ class TW_Slides_Plugin_Settings {
 				)
 			)
 		);
+*/
 
 		$settings = apply_filters( $this->parent->_token . '_settings_fields', $settings );
 
@@ -278,7 +302,7 @@ class TW_Slides_Plugin_Settings {
 
 		// Build page HTML
 		$html = '<div class="wrap" id="' . $this->parent->_token . '_settings">' . "\n";
-			$html .= '<h2>' . __( 'Plugin Settings' , 'tw-slides-plugin' ) . '</h2>' . "\n";
+			$html .= '<h2>' . __( 'Third Wunder Slides Plugin' , 'tw-slides-plugin' ) . '</h2>' . "\n";
 
 			$tab = '';
 			if ( isset( $_GET['tab'] ) && $_GET['tab'] ) {

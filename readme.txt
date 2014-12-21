@@ -1,6 +1,5 @@
 === TW Slides Plugin ===
-Contributors: hlashbrooke
-Donate link: http://www.hughlashbrooke.com/donate
+Contributors: mohamedhamad
 Tags: wordpress, plugin, template
 Requires at least: 3.9
 Tested up to: 4.0
@@ -8,25 +7,23 @@ Stable tag: 1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This is where you craft a short, punchy description of your plugin
+A Slides Custom Post Type Wordpress Plugin
 
 == Description ==
 
-This is where you can give a much longer description of your plugin that you can use to explain just how it awesome it really is.
+This plugin creates a Slides Custom Post Type with options for categories and tags taxonomies.
 
 == Installation ==
 
-Installing "TW Slides Plugin" can be done either by searching for "TW Slides Plugin" via the "Plugins > Add New" screen in your WordPress dashboard, or by using the following steps:
+Installing "TW Slides Plugin" can be done by using the following steps:
 
-1. Download the plugin via WordPress.org
+1. Download the plugin from the github repository https://github.com/thirdwunder/TW-WP-Slides_CPT
 1. Upload the ZIP file through the 'Plugins > Add New > Upload' screen in your WordPress dashboard
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
 == Frequently Asked Questions ==
 
-= What is the plugin template for? =
 
-This plugin template is designed to help you get started with any new WordPress plugin.
 
 == Changelog ==
 

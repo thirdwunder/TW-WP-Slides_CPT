@@ -49,7 +49,6 @@ function TW_Slides_Plugin () {
 }
 
 TW_Slides_Plugin();
-
 $prefix = 'tw_';
 
 $slides_category = get_option('wpt_tw_slide_category') ? get_option('wpt_tw_slide_category') : "off";
@@ -58,14 +57,23 @@ $slides_tag      = get_option('wpt_tw_slide_tag') ? get_option('wpt_tw_slide_tag
 $slides_enable_video = get_option('wpt_tw_slide_enable_video') ? get_option('wpt_tw_slides_enable_video') : "off";
 $slides_enable_expiration = get_option('wpt_tw_slide_enable_expiration') ? get_option('wpt_tw_slides_enable_expiration') : "off";
 
-TW_Slides_Plugin()->register_post_type( 'tw_slide', __( 'Slides', 'tw' ), __( 'Slide', 'tw' ) );
+TW_Slides_Plugin()->register_post_type(
+                        'tw_slide',
+                        __( 'Slides',     'tw-slides-plugin' ),
+                        __( 'Slide',      'tw-slides-plugin' ),
+                        __( 'Slides CPT', 'tw-slides-plugin'),
+                        array(
+                          'menu_icon'=>plugins_url( 'assets/img/cpt-icon-slide.png', __FILE__ ),
+                          'rewrite' => array('slug' => 'slide'),
+                        )
+                    );
 
 if($slides_category=='on'){
-  TW_Slides_Plugin()->register_taxonomy( 'tw_slide_category', __( 'Slide Categories', 'tw' ), __( 'Slide Category', 'tw' ), 'tw_slide', array('hierarchical'=>true) );
+  TW_Slides_Plugin()->register_taxonomy( 'tw_slide_category', __( 'Slide Categories', 'tw-slides-plugin' ), __( 'Slide Category', 'tw' ), 'tw_slide', array('hierarchical'=>true) );
 }
 
 if($slides_tag=='on'){
- TW_Slides_Plugin()->register_taxonomy( 'tw_slide_tag', __( 'Slide Tags', 'tw' ), __( 'Slide Tag', 'tw' ), 'tw_slide', array('hierarchical'=>false) );
+ TW_Slides_Plugin()->register_taxonomy( 'tw_slide_tag', __( 'Slide Tags', 'tw-slides-plugin' ), __( 'Slide Tag', 'tw-slides-plugin' ), 'tw_slide', array('hierarchical'=>false) );
 }
 
 if (is_admin()){
@@ -77,7 +85,7 @@ if (is_admin()){
     'priority'       => 'high',
     'fields'         => array(),
     'local_images'   => true,
-    'use_with_theme' => false          //change path if used with theme set to true, false for a plugin or anything else for a custom path(default false).
+    'use_with_theme' => false
   );
 
   $slide_meta =  new AT_Meta_Box($slide_config);

@@ -109,7 +109,7 @@ class TW_Slides_Plugin_Settings {
 
 		$settings['standard'] = array(
 			'title'					=> __( 'Settings', 'tw-slides-plugin' ),
-			'description'			=> __( 'Third Wunder Slides plugin settings', 'tw-slides-plugin' ),
+			'description'			=> __( 'Third Wunder Slides plugin general settings', 'tw-slides-plugin' ),
 			'fields'				=> array(
 				array(
 					'id' 			=> 'tw_slide_category',

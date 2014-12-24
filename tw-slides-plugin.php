@@ -65,6 +65,8 @@ TW_Slides_Plugin()->register_post_type(
                         array(
                           'menu_icon'=>plugins_url( 'assets/img/cpt-icon-slide.png', __FILE__ ),
                           'rewrite' => array('slug' => 'slide'),
+                          'exclude_from_search' => true,
+                          'has_archive'     => false,
                         )
                     );
 

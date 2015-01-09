@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // Load plugin class files
 require_once( 'includes/class-tw-slides-plugin.php' );
 require_once( 'includes/class-tw-slides-plugin-settings.php' );
+require_once( 'includes/class-tw-slides-plugin-widgets.php' );
 
 // Load plugin libraries
 require_once( 'includes/lib/class-tw-slides-plugin-admin-api.php' );

@@ -47,8 +47,8 @@ class twSlidesWidget extends WP_Widget{
 
     <p><label for="<?php echo $this->get_field_id('order'); ?>"><?php _e('Order by','tw'); ?> </label>
       <select id="<?php echo $this->get_field_id( 'order' ); ?>" name="<?php echo $this->get_field_name( 'order' ); ?>">
-           <option value="date"  <?php selected( $order, 'date' ); ?>><?php echo __('Date','tw'); ?></option>
-           <option value="name"  <?php selected( $order, 'name' ); ?>><?php echo __('Name','tw'); ?></option>
+           <option value="date"       <?php selected( $order, 'date' ); ?>><?php echo __('Date','tw'); ?></option>
+           <option value="name"       <?php selected( $order, 'name' ); ?>><?php echo __('Name','tw'); ?></option>
            <option value="menu_order" <?php selected( $order, 'menu_order' ); ?>><?php echo __('Assigned Order','tw'); ?></option>
       </select>
     </p>
@@ -113,6 +113,9 @@ class twSlidesWidget extends WP_Widget{
 }
 
 function tw_slides_widget($args){
+  $expiry_enabled = (get_option('wpt_tw_slide_enable_expiration') && get_option('wpt_tw_slide_enable_expiration')=='on') ? true : false;
+  $video_enabled = (get_option('wpt_tw_slide_enable_video') && get_option('wpt_tw_slide_enable_video')=='on') ? true : false;
+
   $num = isset($args['number']) ? intval(trim($args['number'])) : 5 ;
   $orderby = isset($args['order']) ? trim($args['order']) : 'date';
   $order = 'desc';
@@ -144,7 +147,6 @@ function tw_slides_widget($args){
 
   if($args['enable_cat']){
     $category = trim($args['category']);
-    //$query_args['tw_slide_category'] = $category;
     if($category!==''){
       $tax_query[] = array(
   			'taxonomy' => 'tw_slide_category',
@@ -177,26 +179,71 @@ function tw_slides_widget($args){
     $tax_query['relation'] = 'AND';
   }
 
+
+  if($expiry_enabled){
+    $meta_query = array();
+    //$meta_query['relation'] = 'OR';
+    $meta_query[] = array(
+			'key'       => 'tw_slide_expiry_date',
+			'value'     => current_time( 'Y-m-d' ),
+			'compare'   => '>=',
+			'type'      => 'DATE',
+		);
+
+    $query_args['meta_query'] = $meta_query;
+  }
+
   $query_args['tax_query'] = $tax_query;
   $slides = new WP_Query( $query_args );
-
   if ( $slides->have_posts() ) :
     echo $args['before_widget'];
+    $count = 0;
+    $slide_count = 0;
     ?>
     <div id="<?php echo $args['widget_id'];?>-carousel" class="homepage-carousel carousel slide" data-ride="carousel">
-
-      <!-- Indicators -->
-
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
       <?php
-        $count=0;
-        while($slides->have_posts()):
-          $slides->the_post();
+
+        while($slides->have_posts()): $slides->the_post();
+          $is_expired = false;
+          $has_video = false;
+          if($video_enabled){
+            $has_video = (get_post_meta(get_the_id(), 'tw_slide_video_enable', true) && trim(get_post_meta(get_the_id(), 'tw_slide_video_enable', true))=='on' ) ? true : false;
+            $video_url = trim(get_post_meta(get_the_id(), 'tw_slide_video_url', true))!=='' ? trim(get_post_meta(get_the_id(), 'tw_slide_video_url', true)) : false;
+            $video_poster = is_array(get_post_meta(get_the_id(), 'tw_slide_video_poster', true)) ? get_post_meta(get_the_id(), 'tw_slide_video_poster', true) : false;
+
+            if(is_array($video_poster) && isset($video_poster['id'])){
+              $video_poster_id = $video_poster['id'];
+            }else{
+              $video_poster_id = wp_get_attachment_image(get_the_id(), 'medium');
+              $video_poster_id = $video_poster_id[0];
+            }
+
+            if(function_exists('tw_get_image_src')){
+              $image_sizes = array('4x3-small','4x3-small','4x3-small');
+              $video_poster_src = tw_get_image_src($video_poster_id, $image_sizes);
+              $video_bg = "background: url('$video_poster_src');";
+            }else{
+              $video_poster_src = wp_get_attachment_image_src($video_poster_id, 'medium');
+              $video_bg = "background: url('$video_poster_src[0]');";
+            }
+
+          }
+
+          if($expiry_enabled){
+            $today = strtotime(current_time( 'Y-m-d H:m'));
+            $e_date = get_post_meta( get_the_id(), 'tw_slide_expiry_date', true);
+            $e_time = get_post_meta( get_the_id(), 'tw_slide_expiry_time', true);
+            $expiry_dt = $e_date.' '.$e_time;
+            $e_ts = strtotime($expiry_dt);
+            $is_expired = ($e_ts<$today) ? true : false;
+          }
+
           $button  = trim(get_post_meta( get_the_id(), 'tw_slide_cta_title', true));
           $url     = trim(get_post_meta( get_the_id(), 'tw_slide_cta_url', true));
 
-          if(has_post_thumbnail()): ?>
+          if(has_post_thumbnail() && !$is_expired): $slide_count++; ?>
           <div class="item <?php if($count==0){ echo('active'); }?>" >
             <?php
               if(function_exists('tw_the_post_thumbnail')){
@@ -207,11 +254,26 @@ function tw_slides_widget($args){
               }
             ?>
 
+            <?php if($video_enabled && $has_video && $video_url!=''): ?>
+              <div class="carousel-caption with-video">
+                <h3><?php the_title(); ?></h3>
+                <div id="section-video-<?php the_id(); ?>" class="section-video" style="<?php echo $video_bg; ?>">
+                   <div id="video-<?php the_id(); ?>" class="video embed-responsive embed-responsive-16by9" >
+                     <!-- <?php echo html_entity_decode(tw_videoURL_to_embedCode($video_url, true)); ?> -->
+                   </div>
+                 </div>
 
-            <?php if(has_excerpt()): ?>
+                <?php if($button!="" && $url!=""): ?>
+                  <div>
+                  <a class="btn btn-primary pull-right" href="<?php echo $url;?>" title="<?php echo $button; ?>"><?php echo $button; ?></a>
+                    <div class="clearfix"></div>
+                  </div>
+                <?php endif; ?>
+              </div>
+            <?php elseif(get_the_content()!==''): ?>
               <div class="carousel-caption">
                 <h3><?php the_title(); ?></h3>
-                <?php the_excerpt(); ?>
+                <?php the_content(); ?>
                 <?php if($button!="" && $url!=""): ?>
                   <div>
                   <a class="btn btn-primary pull-right" href="<?php echo $url;?>" title="<?php echo $button; ?>"><?php echo $button; ?></a>
@@ -225,8 +287,16 @@ function tw_slides_widget($args){
         <?php
           $count++;
           endif;
-        endwhile; ?>
+        endwhile; $count = 0;?>
       </div><!-- carousel-inner -->
+
+
+      <!-- Indicators -->
+      <ol class="carousel-indicators">
+        <?php for($i=0;$i<$slide_count;$i++): ?>
+        <li data-target="<?php echo $args['widget_id'];?>-carousel" data-slide-to="<?php echo $i ;?>" class="<?php if($i==0){ echo('active'); }?>"></li>
+        <?php endfor; ?>
+      </ol>
 
       <?php //if(count($slides)>1): ?>
       <!-- Controls -->

@@ -55,8 +55,8 @@ $prefix = 'tw_';
 $slides_category = get_option('wpt_tw_slide_category') ? get_option('wpt_tw_slide_category') : "off";
 $slides_tag      = get_option('wpt_tw_slide_tag') ? get_option('wpt_tw_slide_tag') : "off";
 
-$slides_enable_video = get_option('wpt_tw_slide_enable_video') ? get_option('wpt_tw_slides_enable_video') : "off";
-$slides_enable_expiration = get_option('wpt_tw_slide_enable_expiration') ? get_option('wpt_tw_slides_enable_expiration') : "off";
+$slides_enable_video = get_option('wpt_tw_slide_enable_video') ? get_option('wpt_tw_slide_enable_video') : "off";
+$slides_enable_expiration = get_option('wpt_tw_slide_enable_expiration') ? get_option('wpt_tw_slide_enable_expiration') : "off";
 
 TW_Slides_Plugin()->register_post_type(
                         'tw_slide',
@@ -103,8 +103,9 @@ if (is_admin()){
   }
 
   if($slides_enable_expiration=='on'){
-    $slide_meta->addDate($prefix.'slide_expiry_date',array('name'=> 'Expiration Date','desc'=>'Date to stop displaying the slide', 'group' => 'start'));
-    $slide_meta->addTime($prefix.'slide_expiry_time',array('name'=> 'Expiration Time','desc'=>'Time to stop displaying the slide', 'group' => 'end'));
+    $exp_date = Date('Y-m-d', strtotime("+5 years"));
+    $slide_meta->addDate($prefix.'slide_expiry_date',array('name'=> 'Expiration Date','desc'=>'Date to stop displaying the slide.<br/> <strong>By default, set to 5 years in the future.</strong>','std'=>$exp_date, 'group' => 'start'));
+    $slide_meta->addTime($prefix.'slide_expiry_time',array('name'=> 'Expiration Time','desc'=>'Time to stop displaying the slide', 'std'=>'12:00','group' => 'end'));
   }
 
   $slide_meta->Finish();

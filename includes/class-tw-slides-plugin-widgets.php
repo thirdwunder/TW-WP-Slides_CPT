@@ -195,12 +195,17 @@ function tw_slides_widget($args){
 
   $query_args['tax_query'] = $tax_query;
   $slides = new WP_Query( $query_args );
+
+  if(function_exists('tw_get_slider_style')){
+    $slider_transition = tw_get_slider_style()=='fade' ? 'carousel-fade' : '';
+  }
+
   if ( $slides->have_posts() ) :
     echo $args['before_widget'];
     $count = 0;
     $slide_count = 0;
     ?>
-    <div id="<?php echo $args['widget_id'];?>-carousel" class="homepage-carousel carousel slide" data-ride="carousel">
+    <div id="<?php echo $args['widget_id'];?>-carousel" class="homepage-carousel carousel <?php echo $slider_transition;?> slide" data-ride="carousel">
       <!-- Wrapper for slides -->
       <div class="carousel-inner" role="listbox">
       <?php
